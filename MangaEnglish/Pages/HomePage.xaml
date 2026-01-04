@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MangaEnglish.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F7F7FA">
+
+    <!-- 親を Center にするのが MAUI の正解 -->
+    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+
+        <VerticalStackLayout 
+            Padding="0"
+            Spacing="28"
+            WidthRequest="320"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+
+            <Label Text="英単語を学ぼう"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#333"/>
+
+            <Border x:Name="StartLearningButton" Style="{StaticResource PrimaryButton}">
+                <Label Text="今日の学習を始める"
+                       TextColor="White"
+                       FontSize="20"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+            <Border x:Name="SelectTitleButton" Style="{StaticResource CardButton}">
+                <Label Text="作品を選ぶ"
+                       FontSize="20"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+            <Border x:Name="SettingsButton" Style="{StaticResource CardButton}">
+                <Label Text="設定"
+                       FontSize="20"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

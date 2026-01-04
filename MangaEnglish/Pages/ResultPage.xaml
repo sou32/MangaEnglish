@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MangaEnglish.Pages.ResultPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F3F4F6"
+    Title="学習結果">
+    
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False"/>
+    </Shell.BackButtonBehavior>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="28" HorizontalOptions="Center">
+
+            <Label Text="おつかれさま！"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"/>
+
+            <Label x:Name="LearnedCountLabel"
+                   FontSize="22"
+                   TextColor="#444"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- 学習をもう一度 -->
+            <Border x:Name="RetryButton"
+                    Style="{StaticResource PrimaryButton}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="RetryClicked" />
+                </Border.GestureRecognizers>
+
+                <Label Text="もう一度学習する"
+                       TextColor="White"
+                       FontSize="18"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+            <!-- ホームへ戻る -->
+            <Border x:Name="HomeButton"
+                    Style="{StaticResource CardButton}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="HomeClicked" />
+                </Border.GestureRecognizers>
+
+                <Label Text="ホームに戻る"
+                       FontSize="18"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

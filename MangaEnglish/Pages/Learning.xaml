@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MangaEnglish.Pages.LearningPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F7F7FA">
+
+    <Grid x:Name="RootLayout" Padding="20" RowDefinitions="Auto, *">
+
+        <Border x:Name="WordCard"
+                Grid.Row="0"
+                StrokeShape="RoundRectangle 22"
+                BackgroundColor="White"
+                Padding="24"
+                HorizontalOptions="Center"
+                WidthRequest="{Binding Source={x:Reference RootLayout}, Path=Width, Converter={StaticResource Percent90Converter}}"
+                Shadow="10,5,0,#00000030"
+                Margin="0,10,0,10">
+
+            <VerticalStackLayout Spacing="6">
+                <Label x:Name="EnglishLabel"
+                       FontSize="40"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"/>
+
+                <Label x:Name="JapaneseLabel"
+                       FontSize="26"
+                       TextColor="#666"
+                       HorizontalTextAlignment="Center"/>
+
+                <Label x:Name="ProgressLabel"
+                       FontSize="18"
+                       TextColor="#999"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="20" Padding="0,20,0,0">
+
+            <HorizontalStackLayout x:Name="NormalPanel"
+                                   Spacing="20"
+                                   HorizontalOptions="Center"
+                                   IsVisible="False">
+                <Button x:Name="PrevButton"
+                        Text="戻る"
+                        WidthRequest="140"
+                        FontSize="20"/>
+                <Button x:Name="NextButton"
+                        Text="次へ"
+                        WidthRequest="140"
+                        FontSize="20"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout x:Name="YesNoPanel"
+                                   Spacing="20"
+                                   HorizontalOptions="Center"
+                                   IsVisible="False">
+                <Button x:Name="YesButton"
+                        Text="Yes"
+                        WidthRequest="150"
+                        BackgroundColor="#4ADE80"
+                        TextColor="White"
+                        FontSize="22"/>
+
+                <Button x:Name="NoButton"
+                        Text="No"
+                        WidthRequest="150"
+                        BackgroundColor="#F87171"
+                        TextColor="White"
+                        FontSize="22"/>
+            </HorizontalStackLayout>
+
+            <VerticalStackLayout x:Name="QuizPanel"
+                                 Spacing="10"
+                                 Padding="20,0"
+                                 IsVisible="False">
+
+                <Border x:Name="Choice1" Style="{StaticResource QuizChoiceStyle}">
+                    <Label x:Name="Choice1Text" FontSize="22"/>
+                </Border>
+
+                <Border x:Name="Choice2" Style="{StaticResource QuizChoiceStyle}">
+                    <Label x:Name="Choice2Text" FontSize="22"/>
+                </Border>
+
+                <Border x:Name="Choice3" Style="{StaticResource QuizChoiceStyle}">
+                    <Label x:Name="Choice3Text" FontSize="22"/>
+                </Border>
+
+                <Border x:Name="Choice4" Style="{StaticResource QuizChoiceStyle}">
+                    <Label x:Name="Choice4Text" FontSize="22"/>
+                </Border>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

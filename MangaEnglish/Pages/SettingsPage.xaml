@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MangaEnglish.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="設定"
+    BackgroundColor="#F7F7FA">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="22">
+
+            <Label Text="学習モード"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#333"/>
+
+            <!-- モード選択 -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+
+                <Border x:Name="ModeNormal"
+                        Grid.Column="0"
+                        Padding="14"
+                        Stroke="#AAA"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="通常" HorizontalTextAlignment="Center"/>
+                        <Label Text="Next / Prev" FontSize="12" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border x:Name="ModeYesNo"
+                        Grid.Column="1"
+                        Padding="14"
+                        Stroke="#AAA"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Yes / No" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border x:Name="ModeQuiz"
+                        Grid.Column="2"
+                        Padding="14"
+                        Stroke="#AAA"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="四択" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- 反映中設定 -->
+            <Label x:Name="CurrentModeLabel" Text="モード：-" FontSize="16" TextColor="#555"/>
+
+            <!-- 問題数設定 -->
+            <Label Text="問題数（四択クイズ）"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#333"/>
+
+            <Entry x:Name="QuizLimitEntry"
+                   Placeholder="例：20"
+                   Keyboard="Numeric"/>
+
+            <Label x:Name="CurrentQuizLimitLabel" Text="問題数：-" FontSize="16" TextColor="#555"/>
+
+            <!-- 自動Next設定 -->
+            <Label Text="自動Next（秒数）"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#333"/>
+
+            <Entry x:Name="AutoNextEntry"
+                   Placeholder="例：2"
+                   Keyboard="Numeric"/>
+            <Label x:Name="CurrentAutoLabel" Text="自動Next：無効" FontSize="16" TextColor="#555"/>
+
+            <!-- 保存 -->
+            <Button x:Name="SaveButton"
+                    Text="保存"
+                    BackgroundColor="#4A90E2"
+                    TextColor="White"
+                    FontSize="20"
+                    CornerRadius="12"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

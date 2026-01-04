@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application 
+    x:Class="MangaEnglish.App"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:conv="clr-namespace:MangaEnglish.Converters">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <conv:Percent90Converter x:Key="Percent90Converter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- メインカラー -->
+            <Color x:Key="PrimaryColor">#6C63FF</Color>
+            <Color x:Key="AccentGreen">#4ADE80</Color>
+            <Color x:Key="AccentRed">#F97373</Color>
+            <Color x:Key="CardStroke">#DDDDDD</Color>
+
+            <!-- 共通カード -->
+            <Style x:Key="CardButton" TargetType="Border">
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="20" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource CardStroke}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="Margin" Value="8,6" />
+            </Style>
+
+            <!-- プライマリボタン風カード -->
+            <Style x:Key="PrimaryButton" TargetType="Border" BasedOn="{StaticResource CardButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="Stroke" Value="{x:Null}" />
+            </Style>
+
+            <!-- 四択ボタン -->
+            <Style x:Key="QuizChoiceStyle" TargetType="Border">
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="#DDD" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="Margin" Value="0,4" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="Shadow" Value="5,3,0,#00000020" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

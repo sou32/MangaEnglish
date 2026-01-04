@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MangaEnglish.Pages.ChapterSelectPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:MangaEnglish.Models"
+    BackgroundColor="#F7F7FA"
+    Title="チャプターを選ぶ">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <!-- 現在選択中のチャプター表示 -->
+        <Label
+            x:Name="CurrentChapterLabel"
+            Text="現在のチャプター：未選択"
+            FontSize="18"
+            TextColor="#555"
+            Margin="0,0,0,4" />
+
+        <Label Text="チャプターを選ぼう"
+               FontSize="22"
+               FontAttributes="Bold"
+               TextColor="#333" />
+
+        <!-- チャプター一覧 -->
+        <ScrollView>
+            <CollectionView
+                x:Name="ChapterCollection"
+                SelectionMode="Single"
+                SelectionChanged="ChapterTapped"
+                Margin="10">
+
+                <CollectionView.ItemTemplate>
+                    <!-- ここで型を Chapter に固定してあげると Name が解決される -->
+                    <DataTemplate x:DataType="models:Chapter">
+                        <Border
+                            BackgroundColor="White"
+                            Stroke="#DDD"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="18"
+                            Margin="8">
+                            <Label Text="{Binding Name}"
+                                   FontSize="20"
+                                   TextColor="#333"/>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </ScrollView>
+
+    </VerticalStackLayout>
+</ContentPage>

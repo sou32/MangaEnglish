@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MangaEnglish.Pages.TitleSelectPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#F7F7FA"
+    Title="作品を選ぶ">
+
+    <Grid RowDefinitions="Auto,*" Padding="0">
+
+        <!-- タイトルバーのスペース確保（iOS対策） -->
+        <Grid Row="0" HeightRequest="10"/>
+
+        <!-- CollectionView（必ず Grid.Row=1 にする） -->
+        <CollectionView
+            Grid.Row="1"
+            x:Name="TitleCollection"
+            SelectionMode="Single"
+            SelectionChanged="TitleTapped"
+            Margin="20">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="#DDD"
+                        StrokeThickness="1"
+                        Padding="20"
+                        Margin="8">
+                        <Label Text="{Binding Name}"
+                               TextColor="#333"
+                               FontSize="20"/>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

@@ -32,6 +32,13 @@
                        FontSize="18"
                        TextColor="#999"
                        HorizontalTextAlignment="Center"/>
+                
+                <Label x:Name="AutoNextLabel"
+                       FontSize="12"
+                       TextColor="#888"
+                       HorizontalOptions="Center"
+                       IsVisible="False" />
+
             </VerticalStackLayout>
         </Border>
 

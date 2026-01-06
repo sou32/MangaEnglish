@@ -26,7 +26,6 @@ public partial class TitleSelectPage : ContentPage
         if (selected == null)
             return;
 
-        // 一度選んだあと、ハイライト残るのイヤならクリア
         TitleCollection.SelectedItem = null;
 
         await Shell.Current.GoToAsync($"chapters?titleId={selected.Id}");

@@ -1,6 +1,5 @@
 using MangaEnglish.Models;
 using SQLite;
-using System.Linq;
 
 namespace MangaEnglish.Services;
 

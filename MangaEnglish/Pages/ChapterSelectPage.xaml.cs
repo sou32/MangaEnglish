@@ -19,8 +19,7 @@ public partial class ChapterSelectPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // タイトル ID が無い場合はとりあえず全部出す
+        
         List<Chapter> chapters;
         if (TitleId > 0)
         {
@@ -56,17 +55,13 @@ public partial class ChapterSelectPage : ContentPage
     {
         if (e.CurrentSelection.FirstOrDefault() is not Chapter selected)
             return;
-
-        // 選択状態クリア（ハイライト残したくない場合）
+        
         ChapterCollection.SelectedItem = null;
-
-        // 選択保存
+        
         Preferences.Set("SelectedChapterId", selected.Id);
-
-        // ラベル更新
+        
         CurrentChapterLabel.Text = $"現在のチャプター：{selected.Name}";
-
-        // ホームへ戻る
+        
         await Shell.Current.GoToAsync("//home");
     }
 }

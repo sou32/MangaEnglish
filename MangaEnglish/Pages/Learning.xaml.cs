@@ -17,6 +17,9 @@ public partial class LearningPage : ContentPage
     private int quizLimit;
     private int quizCount;
 
+    private int remainingSeconds;
+    private bool autoTimerRunning;
+
     private int autoNextSeconds;
     private CancellationTokenSource? autoCTS;
 
@@ -62,14 +65,14 @@ public partial class LearningPage : ContentPage
         autoNextSeconds = Preferences.Get("AutoNext", 0);
 
         _words = await _db.GetWordsByChapterIdAsync(ChapterId);
-        
+
         if (_words == null || _words.Count == 0)
         {
             await DisplayAlert("単語なし", "このチャプターに単語がありません。", "OK");
             await Shell.Current.GoToAsync("//home");
             return;
         }
-        
+
         // ランダム化
         _words = _words.OrderBy(_ => Guid.NewGuid()).ToList();
 
@@ -91,7 +94,13 @@ public partial class LearningPage : ContentPage
             ShowWordNormal(_words[_index]);     // 通常
         }
 
-        StartAutoNextLoop();
+        StartAutoNextLoop(); 
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        StopAutoNextLoop();
     }
 
     private void ApplyModeUI()
@@ -101,18 +110,32 @@ public partial class LearningPage : ContentPage
         QuizPanel.IsVisible = mode == 2;
     }
 
+    // ===== 表示 =====
+    private void ShowWordNormal(Word w)
+    {
+        EnglishLabel.Text = w.English;
+        JapaneseLabel.Text = w.Japanese;
+        ProgressLabel.Text = $"{_index + 1} / {_words.Count}";
+    }
+
     // ===== Yes/No =====
     private void ShowWordRandomized(Word w)
     {
         EnglishLabel.Text = w.English;
 
+        var others = _words.Where(x => x.Id != w.Id).ToList();
+        if (others.Count == 0)
+        {
+            JapaneseLabel.Text = w.Japanese;
+            ProgressLabel.Text = $"{_index + 1} / {_words.Count}";
+            return;
+        }
+
         bool showCorrect = Random.Shared.Next(2) == 0;
 
         JapaneseLabel.Text = showCorrect
             ? w.Japanese
-            : _words.Where(x => x.Id != w.Id)
-                    .OrderBy(_ => Guid.NewGuid())
-                    .First().Japanese;
+            : others.OrderBy(_ => Guid.NewGuid()).First().Japanese;
 
         ProgressLabel.Text = $"{_index + 1} / {_words.Count}";
     }
@@ -139,14 +162,12 @@ public partial class LearningPage : ContentPage
         else
             await Finish();
     }
-
-    // ===== Next / Prev =====
-
+    
     private async void NextWord()
     {
         if (mode != 0) return;
 
-        autoCTS?.Cancel();
+        StopAutoNextLoop(); 
 
         if (_index < _words.Count - 1)
         {
@@ -163,12 +184,11 @@ public partial class LearningPage : ContentPage
         StartAutoNextLoop();
     }
 
-
     private async void PrevWord()
     {
         if (mode != 0) return;
 
-        autoCTS?.Cancel();
+        StopAutoNextLoop(); 
 
         if (_index > 0)
         {
@@ -180,41 +200,95 @@ public partial class LearningPage : ContentPage
         StartAutoNextLoop();
     }
 
-
     private async Task AnimateSlide(int offset)
     {
         await WordCard.TranslateTo(offset, 0, 130, Easing.CubicOut);
         await WordCard.TranslateTo(0, 0, 160, Easing.CubicIn);
     }
-    private void ShowWordNormal(Word w)
-    {
-        EnglishLabel.Text = w.English;
-        JapaneseLabel.Text = w.Japanese;
-        ProgressLabel.Text = $"{_index + 1} / {_words.Count}";
-    }
 
-    // ===== AutoNext =====
+    // ===== AutoNext（カウントダウン） =====
+    private void UpdateAutoNextLabel()
+    {
+        if (mode != 0)
+        {
+            AutoNextLabel.IsVisible = false;
+            return;
+        }
+
+        AutoNextLabel.IsVisible = true;
+
+        if (autoNextSeconds <= 0)
+        {
+            AutoNextLabel.Text = "Auto Next: OFF";
+            return;
+        }
+
+        AutoNextLabel.Text = $"Next in {remainingSeconds}s";
+    }
 
     private void StartAutoNextLoop()
     {
-        if (autoNextSeconds <= 0 || mode != 0)
-            return;
-
-        autoCTS?.Cancel();
-        autoCTS = new CancellationTokenSource();
-
-        Device.StartTimer(TimeSpan.FromSeconds(autoNextSeconds), () =>
+        // 通常モードのみ
+        if (mode != 0)
         {
-            if (autoCTS.IsCancellationRequested)
-                return false;
+            AutoNextLabel.IsVisible = false;
+            return;
+        }
 
-            MainThread.BeginInvokeOnMainThread(() => NextWord());
+        // OFF
+        if (autoNextSeconds <= 0)
+        {
+            StopAutoNextLoop();
+            remainingSeconds = 0;
+            UpdateAutoNextLabel();
+            return;
+        }
+        
+        StopAutoNextLoop();
+
+        autoCTS = new CancellationTokenSource();
+        var token = autoCTS.Token;
+
+        remainingSeconds = autoNextSeconds;
+        UpdateAutoNextLabel();
+
+        autoTimerRunning = true;
+
+        Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+        {
+            if (token.IsCancellationRequested)
+            {
+                autoTimerRunning = false;
+                return false;
+            }
+
+            if (mode != 0 || autoNextSeconds <= 0)
+            {
+                autoTimerRunning = false;
+                return false;
+            }
+
+            remainingSeconds--;
+
+            if (remainingSeconds <= 0)
+            {
+                remainingSeconds = autoNextSeconds;
+                MainThread.BeginInvokeOnMainThread(() => NextWord());
+            }
+
+            MainThread.BeginInvokeOnMainThread(UpdateAutoNextLabel);
             return true;
         });
     }
 
-    // ===== 四択 =====
+    private void StopAutoNextLoop()
+    {
+        autoCTS?.Cancel();
+        autoCTS = null;
+        autoTimerRunning = false;
+    }
 
+    // ===== 四択 =====
     private async Task StartQuizAsync()
     {
         if (quizCount >= quizLimit)
@@ -286,7 +360,6 @@ public partial class LearningPage : ContentPage
     }
 
     // ===== アニメ =====
-
     private async Task AnimateChoiceCorrect(Border b)
     {
         await b.ScaleTo(1.06, 120, Easing.CubicOut);
@@ -325,6 +398,8 @@ public partial class LearningPage : ContentPage
 
     private async Task Finish()
     {
+        StopAutoNextLoop();
+
         int count = await _db.GetTodayLearnedCountAsync();
         await Shell.Current.GoToAsync($"result?count={count}");
     }

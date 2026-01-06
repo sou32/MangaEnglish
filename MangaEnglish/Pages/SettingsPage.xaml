@@ -24,8 +24,7 @@
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 14">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="通常" HorizontalTextAlignment="Center"/>
-                        <Label Text="Next / Prev" FontSize="12" HorizontalTextAlignment="Center"/>
+                        <Label Text="Next / Prev" HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>
                 </Border>
 

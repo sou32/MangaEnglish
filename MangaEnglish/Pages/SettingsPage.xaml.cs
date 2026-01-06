@@ -8,7 +8,7 @@ public partial class SettingsPage : ContentPage
     {
         InitializeComponent();
 
-        // タップ登録
+
         RegisterTap(ModeNormal, () => SelectMode(0));
         RegisterTap(ModeYesNo, () => SelectMode(1));
         RegisterTap(ModeQuiz, () => SelectMode(2));
@@ -33,8 +33,7 @@ public partial class SettingsPage : ContentPage
         int mode = Preferences.Get("LearningMode", 0);
         int limit = Preferences.Get("StudyLimit", 20);
         int autoNext = Preferences.Get("AutoNext", 0);
-
-        // モード反映
+        
         SelectMode(mode);
 
         QuizLimitEntry.Text = limit.ToString();
@@ -47,7 +46,7 @@ public partial class SettingsPage : ContentPage
 
     private string ModeName(int mode) => mode switch
     {
-        0 => "通常（Next / Prev）",
+        0 => "Next / Prev",
         1 => "Yes / No",
         2 => "四択クイズ",
         _ => "不明"

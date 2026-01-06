@@ -13,7 +13,7 @@ public partial class LearningPage : ContentPage
     private List<Word> _words = new();
     private int _index;
 
-    private int mode; // 0 normal, 1 yes/no, 2 quiz
+    private int mode;
     private int quizLimit;
     private int quizCount;
 
@@ -58,11 +58,18 @@ public partial class LearningPage : ContentPage
             ChapterId = Preferences.Get("SelectedChapterId", 0);
 
         mode = Preferences.Get("LearningMode", 0);
-        quizLimit = Preferences.Get("StudyLimit", 20); // ← 修正済み
+        quizLimit = Preferences.Get("StudyLimit", 20);
         autoNextSeconds = Preferences.Get("AutoNext", 0);
 
         _words = await _db.GetWordsByChapterIdAsync(ChapterId);
-
+        
+        if (_words == null || _words.Count == 0)
+        {
+            await DisplayAlert("単語なし", "このチャプターに単語がありません。", "OK");
+            await Shell.Current.GoToAsync("//home");
+            return;
+        }
+        
         // ランダム化
         _words = _words.OrderBy(_ => Guid.NewGuid()).ToList();
 
@@ -72,9 +79,17 @@ public partial class LearningPage : ContentPage
         ApplyModeUI();
 
         if (mode == 2)
-            StartQuiz();
+        {
+            await StartQuizAsync();
+        }
+        else if (mode == 1)
+        {
+            ShowWordRandomized(_words[_index]); // Yes/No
+        }
         else
-            ShowWordRandomized(_words[_index]);
+        {
+            ShowWordNormal(_words[_index]);     // 通常
+        }
 
         StartAutoNextLoop();
     }
@@ -137,7 +152,7 @@ public partial class LearningPage : ContentPage
         {
             _index++;
             await AnimateSlide(-70);
-            ShowWordRandomized(_words[_index]);
+            ShowWordNormal(_words[_index]);
         }
         else
         {
@@ -147,6 +162,7 @@ public partial class LearningPage : ContentPage
 
         StartAutoNextLoop();
     }
+
 
     private async void PrevWord()
     {
@@ -158,16 +174,23 @@ public partial class LearningPage : ContentPage
         {
             _index--;
             await AnimateSlide(70);
-            ShowWordRandomized(_words[_index]);
+            ShowWordNormal(_words[_index]);
         }
 
         StartAutoNextLoop();
     }
 
+
     private async Task AnimateSlide(int offset)
     {
         await WordCard.TranslateTo(offset, 0, 130, Easing.CubicOut);
         await WordCard.TranslateTo(0, 0, 160, Easing.CubicIn);
+    }
+    private void ShowWordNormal(Word w)
+    {
+        EnglishLabel.Text = w.English;
+        JapaneseLabel.Text = w.Japanese;
+        ProgressLabel.Text = $"{_index + 1} / {_words.Count}";
     }
 
     // ===== AutoNext =====
@@ -192,11 +215,11 @@ public partial class LearningPage : ContentPage
 
     // ===== 四択 =====
 
-    private void StartQuiz()
+    private async Task StartQuizAsync()
     {
         if (quizCount >= quizLimit)
         {
-            Finish();
+            await Finish();
             return;
         }
 
@@ -259,7 +282,7 @@ public partial class LearningPage : ContentPage
             LearnedAt = DateTime.Now
         });
 
-        StartQuiz();
+        await StartQuizAsync();
     }
 
     // ===== アニメ =====
